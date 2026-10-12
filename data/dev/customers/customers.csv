@@ -1,0 +1,4 @@
+customer_id,segment,status
+C001,personal,active
+C002,business,active
+C003,personal,inactive

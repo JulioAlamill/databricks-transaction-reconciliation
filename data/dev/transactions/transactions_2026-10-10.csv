@@ -1,0 +1,9 @@
+transaction_id,customer_id,transaction_timestamp,amount,currency,channel,transaction_type
+T1001,C001,2026-10-10T09:15:00,125.50,EUR,online,payment
+T1002,C002,2026-10-10T10:02:00,42.00,EUR,branch,withdrawal
+T1003,C001,2026-10-10T11:30:00,18.75,EUR,mobile,payment
+T1003,C001,2026-10-10T11:30:00,18.75,EUR,mobile,payment
+,C002,2026-10-10T12:00:00,9.00,EUR,online,payment
+T1005,C003,2026-10-10T13:45:00,-5.00,EUR,mobile,payment
+T1006,C999,2026-10-10T14:20:00,70.00,EUR,online,payment
+T1007,C001,not-a-date,12.00,EUR,branch,payment

@@ -1,0 +1,4 @@
+transaction_id,customer_id,transaction_timestamp,amount,currency,channel,transaction_type
+S2001,C101,2026-10-11T08:10:00,80.00,EUR,online,payment
+S2002,C102,2026-10-11T09:25:00,35.25,EUR,branch,withdrawal
+S2003,C101,2026-10-11T10:40:00,14.00,EUR,mobile,payment

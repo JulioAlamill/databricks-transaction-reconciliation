@@ -1,0 +1,5 @@
+transaction_id,customer_id,transaction_timestamp,amount,currency,channel,transaction_type
+P3001,C201,2026-10-12T07:55:00,210.00,EUR,online,payment
+P3002,C202,2026-10-12T09:05:00,61.40,EUR,branch,withdrawal
+P3003,C203,2026-10-12T10:15:00,22.10,EUR,mobile,payment
+P3004,C201,2026-10-12T12:35:00,16.50,EUR,online,payment
