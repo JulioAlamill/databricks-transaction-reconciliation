@@ -36,13 +36,8 @@ def standardize_transactions(df: DataFrame) -> DataFrame:
         df
         .withColumn(
             "transaction_timestamp",
-            F.to_timestamp(
-                F.when(
-                    ~F.col("transaction_timestamp").isin("", "-"),
-                    F.col("transaction_timestamp"),
-                )
-            ),
-        )
+             F.expr("try_cast(transaction_timestamp AS TIMESTAMP)")
+         ) 
         .withColumn("amount", F.col("amount").cast("decimal(18,2)"))
         .withColumn("currency", F.upper(F.col("currency")))
         .withColumn("channel", F.lower(F.col("channel")))

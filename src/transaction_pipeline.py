@@ -14,7 +14,7 @@ def input_file(filename):
     """Build the landing path for the selected environment."""
     environment = spark.conf.get("recon.environment", "dev").lower()
 
-    if environment not in {"dev", "stage", "prod"}:
+    if environment not in {"dev", "stage", "prod", "test"}:
         raise ValueError(
             "recon.environment must be dev, stage, or prod"
         )
