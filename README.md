@@ -1,38 +1,84 @@
-# Financial Transactions & Reconciliation Pipeline
+# Databricks Transaction Reconciliation
 
-A learning project that processes **synthetic** daily banking transactions with Databricks Lakeflow Spark Declarative Pipelines.
+A hands-on data engineering project demonstrating transaction reconciliation using Databricks, Spark Declarative Pipelines (SDP), PySpark, Unity Catalog and automated testing.
 
-## Business question
+## Project Overview
 
-Did the transaction file received for each business date agree with its control totals, and which rows need investigation?
+The pipeline processes transaction and customer data, applies data quality rules, identifies invalid or duplicate transactions, and reconciles the processed results against expected control totals.
 
-## Planned data flow
+## Architecture
 
-```text
-Synthetic CSV files
-  → Bronze: landed transaction rows with source metadata
-  → Silver: typed, standardised, deduplicated transactions and quality rules
-  → Gold: daily reconciliation totals and exception views
-```
+The project uses:
 
-The same pipeline code will be configured for development, staging, and production. Each environment will use its own input data and output schema/catalog settings. This first version uses small batch files; incremental file ingestion can follow once the core pipeline and tests work.
+- **Spark Declarative Pipelines (SDP)** to define and execute transformations.
+- **Unity Catalog** to manage tables and environment-specific datasets.
+- **PySpark** for reusable transformation logic.
+- **SDP Expectations** to validate data quality.
+- **pytest** for unit and integration testing.
+- **Databricks Jobs** to orchestrate pipeline execution and automated tests.
+- **Git** for version control.
 
-## Repository layout
+## Testing
 
-- `data/`: small, synthetic source files for dev, stage, and prod
-- `src/`: pipeline code and reusable transformations (to be added next)
-- `tests/`: PySpark unit tests (to be added with the transformations)
-- `resources/`: Lakeflow pipeline and job resources for DAB deployment (added after the pipeline works)
-- `databricks.yml`: DAB targets for dev, stage, and prod (added during deployment work)
+### Unit Tests
 
-## Data quality examples
+File: `tests/test_transformations.py`
 
-The dev sample intentionally includes a duplicate transaction, a blank transaction ID, a non-positive amount, an invalid date, and an unknown customer. We will use these to prove that expectations and tests behave as intended. Source data is synthetic and contains no real customer or account information.
+Tests individual transformation functions independently of the full pipeline.
 
-## Build sequence
+Run using the Databricks notebook `run_tests`.
 
-1. Inspect the sample data and define the cleaning rules.
-2. Implement reusable PySpark transformations and unit tests.
-3. Build the declarative Bronze → Silver → Gold pipeline and add expectations.
-4. Add integration-test validation views using controlled valid and invalid rows.
-5. Connect GitHub and deploy the same code to dev, stage, and prod with DABs.
+### Integration Tests
+
+File: `tests/test_pipeline_integration.py`
+
+Validates the output of the complete test pipeline, including:
+
+- Reconciliation status and control totals.
+- Transaction counts and amounts.
+- Duplicate transaction identification.
+- Customer reference validation.
+- Invalid transaction identification.
+
+Run using the notebook `run_integration_tests`.
+
+## Test Environment
+
+Pipeline: `transaction-reconciliation-integration-test`
+
+Configuration:
+
+- Environment: `test`
+- Source: `/Volumes/workspace/transaction_reconciliation/landing/test/`
+- Target schema: `workspace.transaction_reconciliation_test`
+
+The test dataset contains a controlled set of transactions with known expected outcomes.
+
+The reconciliation test verifies that 3 valid transactions reconcile to a total of EUR 186.25.
+
+## Automated Job
+
+Job: `transaction-reconciliation-test`
+
+The Job contains two dependent tasks:
+
+1. `run_integration_pipeline` — executes the SDP test pipeline.
+2. `run_integration_tests` — runs pytest against the resulting tables, only if the pipeline succeeds.
+
+If any integration assertion fails, the second task fails and the Job reports failure.
+
+## How to Run
+
+1. Open Databricks **Jobs & Pipelines**.
+2. Select `transaction-reconciliation-test`.
+3. Click **Run now**.
+4. Verify that both tasks complete successfully.
+5. Open the `run_integration_tests` task output to inspect pytest results.
+
+Unit tests can be executed independently using the `run_tests` notebook.
+
+## Future Improvements
+
+- Extend environment-specific deployment to development, staging and production.
+- Introduce Declarative Automation Bundles for deployment automation.
+- Add CI/CD checks and automated validation as part of the development workflow.
