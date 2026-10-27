@@ -1,0 +1,12 @@
+bundle:
+  name: transaction-reconciliation
+
+include:
+  - resources/*.yml
+
+workspace:
+  host: https://dbc-96e66829-4cbb.cloud.databricks.com
+
+targets:
+  dev:
+    default: true

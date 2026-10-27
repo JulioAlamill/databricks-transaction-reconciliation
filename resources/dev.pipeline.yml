@@ -1,0 +1,21 @@
+resources:
+  pipelines:
+    reconciliation_dev:
+      name: transaction-reconciliation-dev
+
+      catalog: workspace
+      schema: transaction_reconciliation_dev
+
+      configuration:
+        recon.environment: dev
+
+      libraries:
+        - glob:
+            include: ../src/**
+
+      root_path: ../
+
+      serverless: true
+      continuous: false
+      channel: CURRENT
+      
