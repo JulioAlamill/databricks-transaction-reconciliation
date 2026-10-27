@@ -1,13 +1,13 @@
 resources:
   pipelines:
     reconciliation_dev:
-      name: transaction-reconciliation-dev
+      name: transaction-reconciliation-${bundle.target}
 
       catalog: workspace
-      schema: transaction_reconciliation_dev
+      schema: transaction_reconciliation_${bundle.target}
 
       configuration:
-        recon.environment: dev
+        recon.environment: ${bundle.target}
 
       libraries:
         - glob:
@@ -18,4 +18,3 @@ resources:
       serverless: true
       continuous: false
       channel: CURRENT
-      

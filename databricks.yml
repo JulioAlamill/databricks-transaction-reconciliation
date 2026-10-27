@@ -1,8 +1,9 @@
+
 bundle:
   name: transaction-reconciliation
 
 include:
-  - resources/*.yml
+  - resources/*.pipeline.yml
 
 workspace:
   host: https://dbc-96e66829-4cbb.cloud.databricks.com
@@ -10,3 +11,47 @@ workspace:
 targets:
   dev:
     default: true
+
+    resources:
+      jobs:
+        reconciliation_dev_job:
+          name: transaction-reconciliation-dev-job
+
+          tasks:
+            - task_key: run_reconciliation
+              pipeline_task:
+                pipeline_id: ${resources.pipelines.reconciliation_dev.id}
+
+          schedule:
+            quartz_cron_expression: "0 0 9 * * ?"
+            timezone_id: Europe/Dublin
+            pause_status: UNPAUSED
+
+          email_notifications:
+            on_failure:
+              - jeajea_mx@hotmail.com
+
+  test:
+    resources:
+      jobs:
+        reconciliation_test_job:
+          name: transaction-reconciliation-test
+
+          max_concurrent_runs: 1
+
+          tasks:
+            - task_key: run_integration_pipeline
+              pipeline_task:
+                pipeline_id: ${resources.pipelines.reconciliation_dev.id}
+
+            - task_key: run_integration_tests
+              depends_on:
+                - task_key: run_integration_pipeline
+              run_if: ALL_SUCCESS
+              notebook_task:
+                notebook_path: ./run_integration_tests.ipynb
+                source: WORKSPACE
+
+  stage: {}
+
+  prod: {}
