@@ -10,8 +10,8 @@ resources:
         recon.environment: ${bundle.target}
 
       libraries:
-        - glob:
-            include: ../src/**
+        - file:
+            path: ../src/transaction_pipeline.py
 
       root_path: ../
 
