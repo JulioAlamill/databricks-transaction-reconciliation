@@ -32,8 +32,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Databricks CLI
-        uses: databricks/setup-cli@main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Verify Databricks CLI
-        run: databricks version    
+      - name: Install validation tools
+        run: python -m pip install pyyaml
+
+      - name: Validate YAML syntax
+        run: |
+          python - <<'PY'
+          import yaml
+          from pathlib import Path
+
+          files = [Path("databricks.yml")]
+          files += list(Path("resources").glob("*.yml"))
+
+          for file in files:
+              with file.open(encoding="utf-8") as f:
+                  yaml.safe_load(f)
+              print(f"VALID: {file}")
+          PY      
