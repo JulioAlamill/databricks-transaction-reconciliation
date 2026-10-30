@@ -39,18 +39,18 @@ jobs:
 
       - name: Install validation tools
         run: python -m pip install pyyaml
-
+        
       - name: Validate YAML syntax
         run: |
-          python - <<'PY'
+          python -c "
           import yaml
           from pathlib import Path
 
-          files = [Path("databricks.yml")]
-          files += list(Path("resources").glob("*.yml"))
+          files = [Path('databricks.yml')]
+          files += list(Path('resources').glob('*.yml'))
 
           for file in files:
-              with file.open(encoding="utf-8") as f:
+              with file.open(encoding='utf-8') as f:
                   yaml.safe_load(f)
-              print(f"VALID: {file}")
-          PY      
+              print(f'VALID: {file}')
+          "
